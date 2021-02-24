@@ -6,7 +6,7 @@ alias Asap.Segments.{
   DispensingRecord,
   PrescriberInformation,
   CompoundDrugIngredientDetail,
-  AdditinoalInformationReporting,
+  AdditionalInformationReporting,
   PharmacyTrailer,
   TransactionTrailer
 }
@@ -29,7 +29,7 @@ pat = %PatientInformation{last_name: "REPORT", first_name: "ZERO"}
 dsp = %DispensingRecord{date_filled: "20150101"}
 pre = %PrescriberInformation{}
 cdi = %CompoundDrugIngredientDetail{}
-air = %AdditinoalInformationReporting{}
+air = %AdditionalInformationReporting{}
 tp = %PharmacyTrailer{count: "7"}
 tt = %TransactionTrailer{transaction_control_number: "123456", segment_count: "10"}
 

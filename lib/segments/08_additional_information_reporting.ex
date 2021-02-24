@@ -1,4 +1,4 @@
-defmodule Asap.Segments.AdditinoalInformationReporting do
+defmodule Asap.Segments.AdditionalInformationReporting do
   use Asap.Base
 
   @moduledoc """

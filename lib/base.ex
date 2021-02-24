@@ -17,7 +17,6 @@ defmodule Asap.Base do
       def parse(str) do
         str
         |> String.split("*")
-
         # get source
         # take number list and match to order of schema
       end
@@ -69,35 +68,7 @@ defmodule Asap.Base do
     end
   end
 
-  @spec __schema__(any) :: [[any], ...]
-  def __schema__(fields) do
-    # load =
-    #   for {name, type} <- fields do
-    #     {name, type}
-    #   end
-
-    # dump =
-    #   for {name, type} <- fields do
-    #     {name, {name, type}}
-    #   end
-
-    types_quoted =
-      for {name, type} <- fields do
-        {[:type, type], Macro.escape(name)}
-      end
-
-    # single_arg = [
-    #   {[:dump], dump |> Map.new() |> Macro.escape()},
-    #   {[:load], load |> Macro.escape()}
-    # ]
-
-    # catch_all = [
-    #   {[:type, quote(do: _)], nil}
-    # ]
-
-    # [single_arg, types_quoted]
-    []
-  end
+  def __schema__(_fields), do: []
 
   def __loaded__(module, struct_fields) do
     case Map.new([{:__struct__, module} | struct_fields]) do
@@ -124,7 +95,7 @@ defmodule Asap.Base do
     fields = Module.get_attribute(mod, :struct_fields)
 
     if List.keyfind(fields, name, 0) do
-      raise ArgumentError, "field/association #{inspect(name)} is already set on schema"
+      raise ArgumentError, "field #{inspect(name)} is already set on schema"
     end
 
     Module.put_attribute(mod, :struct_fields, {name, assoc})
