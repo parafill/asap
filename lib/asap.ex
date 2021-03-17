@@ -1,5 +1,5 @@
 defmodule Asap do
-  alias Asap.Transaction
+  alias Asap.{Transaction, Segments}
 
   @moduledoc """
   Documentation for `Asap`.
@@ -15,7 +15,6 @@ defmodule Asap do
   - Segment Terminator (~)
 
   """
-
   @doc """
   convert
   """
@@ -69,10 +68,29 @@ defmodule Asap do
   end
 
   @doc """
+  to_file
+  """
+
+  def to_file(content, _opts \\ []) do
+    Date.utc_today()
+    |> Date.to_iso8601()
+    |> String.replace("-", "")
+    |> add_file_suffix()
+    |> File.write(content)
+  end
+
+  defp add_file_suffix(name) do
+    name <> ".dat"
+  end
+
+  @doc """
   Parse/1
   takes an ASAP string and builds a map/struct
   """
   def parse(str) do
     str
   end
+
+  defp dosage_unit_code("EA"), do: "01"
+  defp dosage_unit_code(_), do: "00"
 end

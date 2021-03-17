@@ -7,7 +7,7 @@ defmodule Asap.Segments.DispensingRecord do
     To identify the basic components of a dispensing of a given prescription order including the date and quantity.
   """
   schema "DSP" do
-    field(:reporting_status, :DSP01, required: true)
+    field(:reporting_status, :DSP01, required: true, default: "00")
     field(:prescription_number, :DSP02, required: true)
     field(:date_written, :DSP03, required: true)
     field(:refills_authorized, :DSP04, required: true)

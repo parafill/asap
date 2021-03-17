@@ -26,7 +26,7 @@ defmodule Asap.Segments.PatientInformation do
     field(:phone, :PAT17, required: true)
     field(:date_of_birth, :PAT18, required: true)
     field(:gender, :PAT19, required: true)
-    field(:species_code, :PAT20, required: true)
+    field(:species_code, :PAT20, required: true, default: "01")
     field(:patient_location_code, :PAT21)
     field(:country_of_non_us_resident, :PAT22)
     field(:name_of_animal, :PAT23)
