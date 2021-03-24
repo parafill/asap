@@ -5,6 +5,16 @@ defmodule Asap.Segments.DispensingRecord do
     Dispensing Record – Required
 
     To identify the basic components of a dispensing of a given prescription order including the date and quantity.
+
+
+  • 01 Private Pay
+  • 02 Medicaid
+  • 03 Medicare
+  • 04 Commercial Insurance
+  • 05 Military Installations and VA
+  • 06 Workers’ Compensation
+  • 07 Indian Nations
+  • 99 Other
   """
   schema "DSP" do
     field(:reporting_status, :DSP01, required: true, default: "00")

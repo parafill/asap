@@ -6,17 +6,21 @@ defmodule Asap.Base do
       Module.register_attribute(__MODULE__, :schema, accumulate: false)
       Module.register_attribute(__MODULE__, :asap_fields, accumulate: true)
 
-      def serialize(struct) do
-        struct.__struct__.__schema__(:fields)
-        |> Enum.map(&Map.get(struct, &1, ""))
-        |> Enum.map(&to_string/1)
-        |> concat(struct.__struct__.__schema__(:source))
-        |> Enum.join("*")
+      def serialize(struct, terminator \\ "\\") do
+        str =
+          struct.__struct__.__schema__(:fields)
+          |> Enum.map(&Map.get(struct, &1, ""))
+          |> Enum.map(&to_string/1)
+          |> concat(struct.__struct__.__schema__(:source))
+          |> Enum.join("*")
+
+        str <> terminator
       end
 
       def parse(str) do
         str
         |> String.split("*")
+
         # get source
         # take number list and match to order of schema
       end

@@ -20,9 +20,13 @@ defmodule Asap do
   """
 
   def convert(%Transaction{} = transaction) do
+    terminator =
+      get_or_create(transaction, :transaction_header, %Asap.Segments.TransactionHeader{})
+      |> Map.get(:segment_terminator_character, "\\")
+
     transaction
     |> to_list()
-    |> convert_segments()
+    |> convert_segments(terminator)
   end
 
   defp to_list(transaction) do
@@ -57,13 +61,13 @@ defmodule Asap do
   defp populate(val, _), do: val
 
   @doc """
-  convert_segments/1
+  convert_segments/2
 
   list of segments and turns it into a ASAP string
   """
-  def convert_segments(data) do
+  def convert_segments(data, terminator \\ "\\") do
     data
-    |> Enum.map(& &1.__struct__.serialize(&1))
+    |> Enum.map(& &1.__struct__.serialize(&1, terminator))
     |> Enum.join("\n")
   end
 
