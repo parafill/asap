@@ -20,39 +20,55 @@ defmodule Asap do
   """
 
   def convert(%Transaction{} = transaction) do
+    transaction_header =
+      get_or_create(transaction, :transaction_header, %Segments.TransactionHeader{})
+
+    segments = parse_segments(transaction.segments)
+
+    transaction_trailer =
+      get_or_create(transaction, :transaction_trailer, %Segments.TransactionTrailer{
+        transaction_control_number: transaction_header.transaction_control_number,
+        segment_count: length(segments)
+      })
+
     terminator =
-      get_or_create(transaction, :transaction_header, %Asap.Segments.TransactionHeader{})
+      transaction_header
       |> Map.get(:segment_terminator_character, "\\")
 
-    transaction
-    |> to_list()
+    # this doesn't seem like the best methd
+    ([transaction_header | segments] ++ [transaction_trailer])
     |> convert_segments(terminator)
   end
 
+  def parse_segments(segments) when is_list(segments) do
+    segments
+    |> Enum.flat_map(&to_list/1)
+  end
+
+  def parse_segments(_), do: to_list(%{})
+
   defp to_list(transaction) do
     [
-      get_or_create(transaction, :transaction_header, %Asap.Segments.TransactionHeader{}),
-      get_or_create(transaction, :information_source, %Asap.Segments.InformationSource{}),
-      get_or_create(transaction, :pharmacy_header, %Asap.Segments.PharmacyHeader{}),
-      get_or_create(transaction, :patient_information, %Asap.Segments.PatientInformation{}),
-      get_or_create(transaction, :dispensing_record, %Asap.Segments.DispensingRecord{}),
-      get_or_create(transaction, :prescriber_information, %Asap.Segments.PrescriberInformation{}),
+      get_or_create(transaction, :information_source, %Segments.InformationSource{}),
+      get_or_create(transaction, :pharmacy_header, %Segments.PharmacyHeader{}),
+      get_or_create(transaction, :patient_information, %Segments.PatientInformation{}),
+      get_or_create(transaction, :dispensing_record, %Segments.DispensingRecord{}),
+      get_or_create(transaction, :prescriber_information, %Segments.PrescriberInformation{}),
       get_or_create(
         transaction,
         :compound_drug_ingredient_detail,
-        %Asap.Segments.CompoundDrugIngredientDetail{}
+        %Segments.CompoundDrugIngredientDetail{}
       ),
       get_or_create(
         transaction,
         :additional_information_reporting,
-        %Asap.Segments.AdditionalInformationReporting{}
+        %Segments.AdditionalInformationReporting{}
       ),
-      get_or_create(transaction, :pharmacy_trailer, %Asap.Segments.PharmacyTrailer{}),
-      get_or_create(transaction, :transaction_trailer, %Asap.Segments.TransactionTrailer{})
+      get_or_create(transaction, :pharmacy_trailer, %Segments.PharmacyTrailer{})
     ]
   end
 
-  defp get_or_create(transaction, field, default) do
+  def get_or_create(transaction, field, default) do
     Map.get(transaction, field)
     |> populate(default)
   end
@@ -94,7 +110,4 @@ defmodule Asap do
   def parse(str) do
     str
   end
-
-  defp dosage_unit_code("EA"), do: "01"
-  defp dosage_unit_code(_), do: "00"
 end

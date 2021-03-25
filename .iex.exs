@@ -31,7 +31,34 @@ pre = %PrescriberInformation{}
 cdi = %CompoundDrugIngredientDetail{}
 air = %AdditionalInformationReporting{}
 tp = %PharmacyTrailer{count: "7"}
-tt = %TransactionTrailer{transaction_control_number: "123456", segment_count: "10"}
+# tt = %TransactionTrailer{transaction_control_number: "123456", segment_count: "10"}
 
 
-data = [th, is, pha, pat, dsp, pre, cdi, air, tp, tt]
+# data = [th, is, pha, pat, dsp, pre, cdi, air, tp]
+
+transaction = %Asap.Transaction{
+  transaction_header: th,
+  segments: [
+    %Asap.Segment{
+      information_source: is,
+      pharmacy_header: pha,
+      patient_information: pat,
+      dispensing_record: dsp,
+      prescriber_information: pre,
+      compound_drug_ingredient_detail: cdi,
+      additional_information_reporting: air,
+      pharmacy_trailer: tp
+    },
+    %Asap.Segment{
+      information_source: is,
+      pharmacy_header: pha,
+      patient_information: pat,
+      dispensing_record: dsp,
+      prescriber_information: pre,
+      compound_drug_ingredient_detail: cdi,
+      additional_information_reporting: air,
+      pharmacy_trailer: tp
+    }
+  ],
+  # transaction_trailer: tt
+}
