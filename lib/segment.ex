@@ -1,6 +1,6 @@
 defmodule Asap.Segment do
   defstruct [
-    :information_source,
+    # :information_source,
     :pharmacy_header,
     :patient_information,
     :dispensing_record,

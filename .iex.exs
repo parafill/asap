@@ -16,7 +16,7 @@ th = %TransactionHeader{
   transaction_control_number: "123456",
   creation_date: "20150101",
   creation_time: "223000",
-  file_type: "P"
+  file_type: "T"
 }
 
 is = %InformationSource{
@@ -38,9 +38,9 @@ tp = %PharmacyTrailer{count: "7"}
 
 transaction = %Asap.Transaction{
   transaction_header: th,
+  information_source: is,
   segments: [
     %Asap.Segment{
-      information_source: is,
       pharmacy_header: pha,
       patient_information: pat,
       dispensing_record: dsp,
@@ -50,7 +50,6 @@ transaction = %Asap.Transaction{
       pharmacy_trailer: tp
     },
     %Asap.Segment{
-      information_source: is,
       pharmacy_header: pha,
       patient_information: pat,
       dispensing_record: dsp,

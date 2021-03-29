@@ -23,12 +23,16 @@ defmodule Asap do
     transaction_header =
       get_or_create(transaction, :transaction_header, %Segments.TransactionHeader{})
 
+    information_source =
+      get_or_create(transaction, :information_source, %Segments.InformationSource{})
+
     segments = parse_segments(transaction.segments)
 
+    #  3 = TH + IS + TT
     transaction_trailer =
       get_or_create(transaction, :transaction_trailer, %Segments.TransactionTrailer{
         transaction_control_number: transaction_header.transaction_control_number,
-        segment_count: length(segments)
+        segment_count: length(segments) + 3
       })
 
     terminator =
@@ -36,7 +40,8 @@ defmodule Asap do
       |> Map.get(:segment_terminator_character, "\\")
 
     # this doesn't seem like the best methd
-    ([transaction_header | segments] ++ [transaction_trailer])
+    # ([transaction_header | segments] ++ [transaction_trailer])
+    ([transaction_header, information_source] ++ segments ++ [transaction_trailer])
     |> convert_segments(terminator)
   end
 
@@ -49,7 +54,6 @@ defmodule Asap do
 
   defp to_list(transaction) do
     [
-      get_or_create(transaction, :information_source, %Segments.InformationSource{}),
       get_or_create(transaction, :pharmacy_header, %Segments.PharmacyHeader{}),
       get_or_create(transaction, :patient_information, %Segments.PatientInformation{}),
       get_or_create(transaction, :dispensing_record, %Segments.DispensingRecord{}),

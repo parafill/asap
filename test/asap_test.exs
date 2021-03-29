@@ -21,10 +21,10 @@ defmodule AsapTest do
       transaction_control_number: "123456",
       creation_date: "20150101",
       creation_time: "223000",
-      file_type: "P"
+      file_type: "T"
     }
 
-    assert TransactionHeader.serialize(th) == "TH*4.2A*123456*01**20150101*223000*P**\\\\"
+    assert TransactionHeader.serialize(th) == "TH*4.2A*123456*01**20150101*223000*T**\\\\"
 
     is = %InformationSource{
       unique_information_source_id: "7705555555",
@@ -72,7 +72,7 @@ defmodule AsapTest do
       |> Asap.convert_segments()
 
     assert data ==
-             "TH*4.2A*123456*01**20150101*223000*P**\\\\\nIS*7705555555*PHARMACY NAME*#20150101#-#20150107#\\\nPHA***ZZ1234567**********\\\nPAT*******REPORT*ZERO************01***\\\nDSP*00****20150101********************\\\nPRE*********\\\nCDI*****\\\nAIR***********\\\nTP*7\\\nTT*123456*10\\"
+             "TH*4.2A*123456*01**20150101*223000*T**\\\\\nIS*7705555555*PHARMACY NAME*#20150101#-#20150107#\\\nPHA***ZZ1234567**********\\\nPAT*******REPORT*ZERO************01***\\\nDSP*00****20150101********************\\\nPRE*********\\\nCDI*****\\\nAIR***********\\\nTP*7\\\nTT*123456*10\\"
   end
 
   test "Transaction Test" do
@@ -99,9 +99,9 @@ defmodule AsapTest do
 
     transaction = %Asap.Transaction{
       transaction_header: th,
+      information_source: is,
       segments: [
         %Asap.Segment{
-          information_source: is,
           pharmacy_header: pha,
           patient_information: pat,
           dispensing_record: dsp,
@@ -111,7 +111,6 @@ defmodule AsapTest do
           pharmacy_trailer: tp
         },
         %Asap.Segment{
-          information_source: is,
           pharmacy_header: pha,
           patient_information: pat,
           dispensing_record: dsp,
@@ -126,6 +125,6 @@ defmodule AsapTest do
     result = Asap.convert(transaction)
 
     assert result ==
-             "TH*4.2A*123456*01**20150101*223000*T**\\\\\nIS*7705555555*PHARMACY NAME*#20150101#-#20150107#\\\nPHA***ZZ1234567**********\\\nPAT*******REPORT*ZERO************01***\\\nDSP*00****20150101********************\\\nPRE*123456********\\\nCDI*****\\\nAIR***********\\\nTP*7\\\nIS*7705555555*PHARMACY NAME*#20150101#-#20150107#\\\nPHA***ZZ1234567**********\\\nPAT*******REPORT*ZERO************01***\\\nDSP*00****20150101********************\\\nPRE*123456********\\\nCDI*****\\\nAIR***********\\\nTP*7\\\nTT*123456*16\\"
+             "TH*4.2A*123456*01**20150101*223000*T**\\\\\nIS*7705555555*PHARMACY NAME*#20150101#-#20150107#\\\nPHA***ZZ1234567**********\\\nPAT*******REPORT*ZERO************01***\\\nDSP*00****20150101********************\\\nPRE*123456********\\\nCDI*****\\\nAIR***********\\\nTP*7\\\nPHA***ZZ1234567**********\\\nPAT*******REPORT*ZERO************01***\\\nDSP*00****20150101********************\\\nPRE*123456********\\\nCDI*****\\\nAIR***********\\\nTP*7\\\nTT*123456*17\\"
   end
 end
